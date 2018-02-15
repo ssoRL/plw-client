@@ -7,7 +7,7 @@ export const PageSummary = (props: Page) => {
     };
 
     return (
-        <div className="home-button-container" style={colorStyle}>
+        <div className="page-summary-component" style={colorStyle}>
             <div className="home-button">{props.name}</div>
             <div className="window-to-latest">{props.date}</div>
         </div>

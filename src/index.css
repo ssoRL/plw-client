@@ -3,3 +3,12 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.home-component {
+  padding: 5px 20px;
+}
+
+.page-summary-component {
+  margin: 5px;
+  padding: 5px;
+}

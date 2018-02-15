@@ -26,7 +26,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
 
     render() {
         return (
-            <div>
+            <div className="home-component">
                 {/* <CreateNewPageButton handleClick={this.newClick}/> */}
                 {this.state.pages.map(page =>
                     PageSummary(page)
