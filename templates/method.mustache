@@ -1,0 +1,40 @@
+/**
+* {{&summary}}
+* @method
+{{#externalDocs}}
+* @see {@link {{&url}}|{{#description}}{{&description}}{{/description}}{{^description}}External docs{{/description}}}
+{{/externalDocs}}
+* @name {{&className}}#{{&methodName}}
+{{#parameters}}
+    {{^isSingleton}} * @param {{=<% %>=}}{<%&type%>}<%={{ }}=%> {{&camelCaseName}} - {{&description}}{{/isSingleton}}
+{{/parameters}}
+*/
+{{&methodName}}(parameters:{
+{{#parameters}}{{^isSingleton}}{{&camelCaseName}}: {{> type}},
+{{/isSingleton}}{{/parameters}}},
+headers: any,
+): Promise<{{ successfulResponseType }}> {
+    // Generate the path
+    let path = `${this.domain}{{&pathFormatString}}`;
+
+    {{#isPOST}}
+    let body: {[param: string]: string}  = { {{#parameters}}{{#isBodyParameter}}
+    {{&camelCaseName}}: parameters.{{&camelCaseName}},{{/isBodyParameter}}{{/parameters}} 
+    };
+    {{/isPOST}}
+
+    let queryParameters = new URLSearchParams();
+    {{#parameters}}{{#isQueryParameter}}
+    queryParameters.append('{{&camelCaseName}}', parameters.{{&camelCaseName}});
+    {{/isQueryParameter}}{{/parameters}} 
+    path += '?' + queryParameters.toString();
+    
+    {{#isPOST}}
+    return this.post(path, body)
+        .then(result => result.json());
+    {{/isPOST}}
+    {{#isGET}}
+    return this.get(path)
+        .then(result => result.json());
+    {{/isGET}}
+}

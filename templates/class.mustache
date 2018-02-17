@@ -1,0 +1,73 @@
+{{#definitions}}
+export type {{&name}} = {{#tsType}}{{> type}}{{/tsType}};
+{{/definitions}}
+
+/**
+ * {{&description}}
+ * @class {{&className}}
+ * @param {(string)} [domainOrOptions] - The project domain.
+ */
+export default class {{&className}} {
+
+    private domain: string = '{{&domain}}';
+    private errorHandlers: (()=>{})[] = [];
+
+    constructor(domain?: string) {
+        if(domain) {
+            this.domain = domain;
+        }
+    }
+
+    getDomain() {
+        return this.domain;
+    }
+
+    addErrorHandler(handler: (()=>{})) {
+        this.errorHandlers.push(handler);
+    }
+
+{{#methods}}
+    {{> method}}
+
+{{/methods}}
+
+    private get(
+        url: string,
+        extraHeaders: {[param: string]: string} = {}
+    ) {
+        // Create the Headers
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+
+        for(const param in extraHeaders) {
+            headers.append(param, extraHeaders[param]);
+        }
+
+        return fetch(url, {
+            method: 'get',
+            headers: headers
+        })
+    }
+
+    private post(
+        url: string,
+        body: {[param: string]: string},
+        extraHeaders: {[param: string]: string} = {}
+    ) {
+        // Create the Headers
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+
+        for(const param in extraHeaders) {
+            headers.append(param, extraHeaders[param]);
+        }
+
+        return fetch(url, {
+            method: 'post',
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+    }
+}
