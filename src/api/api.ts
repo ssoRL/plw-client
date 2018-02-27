@@ -1,28 +1,34 @@
-export type Page = {
-    'name': string
+export type FeedItem = {
+    name: string
 
-    'notifications': number
-
-    'date': string
-
-    'color': string
+    notifications: number
 };
+export type Thread = {
+    name: string
 
-// type Logger = {
-//     log: (line: string) => any
-// };
+    messages: Array < Message >
+        | Message
+
+};
+export type Message = {
+    userId: number
+
+    content: string
+
+    postTime: string
+};
 
 /**
  * 
- * @class Test
+ * @class API
  * @param {(string)} [domainOrOptions] - The project domain.
  */
-export class Test {
+export class API {
 
     private domain: string = '';
     private errorHandlers: (() => {})[] = [];
 
-    constructor(domain ?: string) {
+    constructor(domain ? : string) {
         if (domain) {
             this.domain = domain;
         }
@@ -39,94 +45,110 @@ export class Test {
     /**
      * 
      * @method
-     * @name Test#ApiPagesGet
+     * @name API#ApiFeedsGet
      */
-    ApiPagesGet(parameters: {},
-                headers: {[name: string]: string},
-    ): Promise < Array < Page >> {
+    ApiFeedsGet(parameters: {},
+        headers: any,
+    ): Promise < Array < FeedItem >> {
         // Generate the path
-        let path = `${this.domain}/api/Pages`;
+        let path = `${this.domain}/api/Feeds`;
 
         let queryParameters = new URLSearchParams();
         path += '?' + queryParameters.toString();
 
-        return this.request('GET', path)
+        return this.get(path)
+            .then(result => result.json());
+    }
+    /**
+     * 
+     * @method
+     * @name API#ApiThreadsByIdGet
+     * @param {integer} id - 
+     */
+    ApiThreadsByIdGet(parameters: {
+            id: number,
+        },
+        headers: any,
+    ): Promise < Thread > {
+        // Generate the path
+        let path = `${this.domain}/api/Threads/${parameters.id}`;
+
+        let queryParameters = new URLSearchParams();
+        path += '?' + queryParameters.toString();
+
+        return this.get(path)
+            .then(result => result.json());
+    }
+    /**
+     * 
+     * @method
+     * @name API#ApiThreadsPost
+     * @param {} name - 
+     */
+    ApiThreadsPost(parameters: {
+            name: string,
+        },
+        headers: any,
+    ): Promise < number > {
+        // Generate the path
+        let path = `${this.domain}/api/Threads`;
+
+        let body: {
+            [param: string]: string
+        } = {
+            name: parameters.name,
+        };
+
+        let queryParameters = new URLSearchParams();
+        path += '?' + queryParameters.toString();
+
+        return this.post(path, body)
             .then(result => result.json());
     }
 
-    private request(
-        method: string,
+    private get(
         url: string,
+        extraHeaders: {
+            [param: string]: string
+        } = {}
     ) {
         // Create the Headers
         let headers = new Headers({
             'Content-Type': 'application/json'
         });
 
-        // for (const param in extraHeaders) {
-        //     headers.append(param, extraHeaders[param]);
-        // }
+        for (const param in extraHeaders) {
+            headers.append(param, extraHeaders[param]);
+        }
 
         return fetch(url, {
-            method: method,
-            headers: headers,
-            mode: 'cors'
-        });
+            method: 'get',
+            headers: headers
+        })
     }
-    /**
-     * 
-     * @method
-     * @name Test#ApiPagesPost
-     * @param {} name - 
-     * @param {} date - 
-     * @param {} color - 
-     */
-    // ApiPagesPost(parameters: {
-    //         name: string,
-    //         date: string,
-    //         color: string,
-    //     },
-    //              headers: any,
-    // ): Promise < Page > {
-    //     // Generate the path
-    //     let path = `${this.domain}/api/Pages`;
 
-    //     let body: {
-    //         [param: string]: string
-    //     } = {
-    //         name: parameters.name,
-    //         date: parameters.date,
-    //         color: parameters.color,
-    //     };
+    private post(
+        url: string,
+        body: {
+            [param: string]: string
+        },
+        extraHeaders: {
+            [param: string]: string
+        } = {}
+    ) {
+        // Create the Headers
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        });
 
-    //     let queryParameters = new URLSearchParams();
-    //     path += '?' + queryParameters.toString();
+        for (const param in extraHeaders) {
+            headers.append(param, extraHeaders[param]);
+        }
 
-    //     return this.request('POST', path, body, {})
-    //         .then(result => result.json < Page > ());
-    // }
-    // /**
-    //  * 
-    //  * @method
-    //  * @name Test#ApiPagesByIdGet
-    //  * @param {integer} id - 
-    //  */
-    // ApiPagesByIdGet(parameters: {
-    //         id: number,
-    //     },
-    //                 headers: any,
-    // ): Promise < Page > {
-    //     // Generate the path
-    //     let path = `${this.domain}/api/Pages/${parameters.id}`;
-
-    //     let body: {
-    //         [param: string]: string
-    //     } = {};
-
-    //     let queryParameters = new URLSearchParams();
-    //     path += '?' + queryParameters.toString();
-
-    //     return this.request('GET', path, body, {})
-    //         .then(result => result.json < Page > ());
-    // }
+        return fetch(url, {
+            method: 'post',
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+    }
 }

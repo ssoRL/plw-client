@@ -1,15 +1,10 @@
 import * as React from 'react';
-import { Page } from '../api/api';
+import { FeedItem } from '../api/api';
 
-export const PageSummary = (props: Page) => {
-    let colorStyle: React.CSSProperties = {
-        backgroundColor: props.color
-    };
-
+export const PageSummary = (props: FeedItem) => {
     return (
-        <div className="page-summary-component" style={colorStyle}>
+        <div className="feed-box">
             <div className="home-button">{props.name}</div>
-            <div className="window-to-latest">{props.date}</div>
         </div>
     );
 };

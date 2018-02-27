@@ -15,8 +15,7 @@ gulp.task("swag", (done) => {
       console.log(swaggerSpec);
       var swagger = JSON.parse(swaggerSpec.trim());
       var source = CodeGen.getCustomCode({
-        moduleName: 'Test',
-        className: 'Test',
+        className: 'API',
         swagger: swagger,
         template: {
           class: fs.readFileSync('./templates/class.mustache', 'utf-8'),
@@ -24,7 +23,7 @@ gulp.task("swag", (done) => {
           type: fs.readFileSync('./templates/type.mustache', 'utf-8')
         }
       });
-      fs.writeFileSync('./api/api.ts', source);
+      fs.writeFileSync('./src/api/api.ts', source);
       done();
     });
   });

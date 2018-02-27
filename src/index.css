@@ -6,9 +6,24 @@ body {
 
 .home-component {
   padding: 5px 20px;
+  display: flex;
+  flex-direction: row;
 }
 
-.page-summary-component {
+.layout-buffer {
+  flex-grow: 2;
+}
+
+.layout-main {
+  flex-grow: 5;
+}
+
+.feed-box {
   margin: 5px;
   padding: 5px;
+  border: 1px solid black;
+}
+
+.hide {
+  display: none;
 }

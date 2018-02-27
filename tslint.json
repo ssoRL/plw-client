@@ -1,5 +1,10 @@
 {
     "extends": ["tslint-react"],
+    "linterOptions": {
+        "exclude": [
+            "src/api/*.ts"
+        ]
+    },
     "rules": {
         "align": [
             true,

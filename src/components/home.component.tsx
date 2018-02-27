@@ -1,36 +1,48 @@
 import * as React from 'react';
 import { PageSummary } from './page-summary.component';
-import { Test, Page } from '../api/api';
+import { API, FeedItem } from '../api/api';
+import { FeedBox } from './feed-box';
+import { NewThread } from './new-thread';
 
 export interface HomeProps {
-    api: Test;
+    api: API;
 }
 
 export interface HomeState {
-    pages: Page[];
+    feed: FeedItem[];
 }
 
 export class Home extends React.Component<HomeProps, HomeState> {
     state: HomeState = {
-        pages: []
+        feed: []
     };
 
     constructor(props: HomeProps) {
         super(props);
 
         // Get the pages
-        this.props.api.ApiPagesGet({}, {}).then(pages => {
-            this.setState({pages: pages});
+        this.props.api.ApiFeedsGet({}, {}).then(feed => {
+            this.setState({ feed: feed });
         });
+    }
+
+    createThread = (name: string) => {
+        const newId = this.props.api.ApiThreadsPost({name: name}, {});
+        // tslint:disable-next-line:no-console
+        console.log(newId);
     }
 
     render() {
         return (
             <div className="home-component">
-                {/* <CreateNewPageButton handleClick={this.newClick}/> */}
-                {this.state.pages.map(page =>
-                    PageSummary(page)
-                )}
+                <div className="layout-buffer" />
+                <div className="layout-main">
+                    <FeedBox title="Create New Thread"><NewThread createThread={this.createThread}/></FeedBox>
+                    {this.state.feed.map(feed =>
+                        PageSummary(feed)
+                    )}
+                </div>
+                <div className="layout-buffer" />
             </div>
         );
     }
