@@ -52,7 +52,7 @@ export class {{&className}} {
 
     private post(
         url: string,
-        body: {[param: string]: string},
+        stringifiedBody: string,
         extraHeaders: {[param: string]: string} = {}
     ) {
         // Create the Headers
@@ -67,7 +67,7 @@ export class {{&className}} {
         return fetch(url, {
             method: 'post',
             headers: headers,
-            body: JSON.stringify(body)
+            body: stringifiedBody
         })
     }
 }

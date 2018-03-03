@@ -1,10 +1,16 @@
 export type FeedItem = {
+    id: number
+
     name: string
 
-    notifications: number
+    lastUpdate: string
 };
 export type Thread = {
+    id: number
+
     name: string
+
+    lastUpdate: string
 
     messages: Array < Message >
         | Message
@@ -16,6 +22,9 @@ export type Message = {
     content: string
 
     postTime: string
+};
+export type postData = {
+    name: string
 };
 
 /**
@@ -55,10 +64,10 @@ export class API {
 
         let queryParameters = new URLSearchParams();
         path += '?' + queryParameters.toString();
-
         return this.get(path)
             .then(result => result.json());
     }
+
     /**
      * 
      * @method
@@ -75,34 +84,26 @@ export class API {
 
         let queryParameters = new URLSearchParams();
         path += '?' + queryParameters.toString();
-
         return this.get(path)
             .then(result => result.json());
     }
+
     /**
      * 
      * @method
      * @name API#ApiThreadsPost
-     * @param {} name - 
+     * @param {} data - 
      */
-    ApiThreadsPost(parameters: {
-            name: string,
-        },
-        headers: any,
+    ApiThreadsPost(body: postData,
+        headers: any
     ): Promise < number > {
         // Generate the path
         let path = `${this.domain}/api/Threads`;
 
-        let body: {
-            [param: string]: string
-        } = {
-            name: parameters.name,
-        };
-
         let queryParameters = new URLSearchParams();
         path += '?' + queryParameters.toString();
 
-        return this.post(path, body)
+        return this.post(path, JSON.stringify(body))
             .then(result => result.json());
     }
 
@@ -129,9 +130,7 @@ export class API {
 
     private post(
         url: string,
-        body: {
-            [param: string]: string
-        },
+        stringifiedBody: string,
         extraHeaders: {
             [param: string]: string
         } = {}
@@ -148,7 +147,7 @@ export class API {
         return fetch(url, {
             method: 'post',
             headers: headers,
-            body: JSON.stringify(body)
+            body: stringifiedBody
         })
     }
 }

@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-export class NewThreadState {
-    name: string;
-}
-
 export class NewThreadProps {
     createThread: (name: string) => void;
+}
+
+export class NewThreadState {
+    name: string;
 }
 
 export class NewThread extends React.Component<NewThreadProps, NewThreadState> {
