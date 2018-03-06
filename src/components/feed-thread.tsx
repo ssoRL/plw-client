@@ -1,39 +1,64 @@
 import * as React from 'react';
 import { Message, API } from '../api/api';
 
+interface UnconfirmedMessage {
+    content: string;
+}
+
 export class FeedThreadProps {
     id: number;
+    name: string;
     api: API;
 }
 
 export class FeedThreadState {
-    name: string;
-    messages: Message[];
+    messages: (Message | UnconfirmedMessage)[];
+    newMessage: string;
 }
 
 export class FeedThread extends React.Component<FeedThreadProps, FeedThreadState> {
-    state = {
-        name: '',
-        messages: []
+    state: FeedThreadState = {
+        messages: [],
+        newMessage: ''
     };
 
     constructor(props: FeedThreadProps) {
         super(props);
 
         // make an api call to determine the
+        this.props.api.ApiThreadsByIdGet({id: this.props.id}).then(
+            thread => {
+                this.setState({messages: thread.messages});
+            }
+        );
     }
 
-    updateName = (event: React.FormEvent<HTMLInputElement>) => {
-        this.setState({name: event.currentTarget.value});
+    updateNewMessage = (event: React.FormEvent<HTMLInputElement>) => {
+        this.setState({newMessage: event.currentTarget.value});
     }
 
-    submit = () => {
-        // this.props.createFeedThread(this.state.name);
+    sendMessage = () => {
+        const content = this.state.newMessage;
+        const messagePost = {
+            userId: 0, 
+            threadId: this.props.id, 
+            content: content
+        };
+        this.props.api.ApiMessagesPost(messagePost);
+        const messages = this.state.messages;
+        messages.push({content: content});
+        this.setState({messages: messages});
     }
 
     render() {
         return (
-            <div>Some Thread Stuff</div>
+            <div>
+                {this.state.messages.map(
+                    message => (<div>{message.content}</div>)
+                )}
+                <input type="text" onChange={this.updateNewMessage} />
+                <button onClick={this.sendMessage}>Send</button>
+            </div>
         );
     }
 }

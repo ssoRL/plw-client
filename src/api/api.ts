@@ -5,6 +5,13 @@ export type FeedItem = {
 
     lastUpdate: string
 };
+export type MessagePost = {
+    userId: number
+
+    threadId: number
+
+    content: string
+};
 export type Thread = {
     id: number
 
@@ -13,17 +20,17 @@ export type Thread = {
     lastUpdate: string
 
     messages: Array < Message >
-        | Message
-
 };
 export type Message = {
-    userId: number
+    user: number
+
+    thread: number
 
     content: string
 
-    postTime: string
+    time: string
 };
-export type postData = {
+export type ThreadPost = {
     name: string
 };
 
@@ -57,7 +64,7 @@ export class API {
      * @name API#ApiFeedsGet
      */
     ApiFeedsGet(parameters: {},
-        headers: any,
+        headers: any = {}
     ): Promise < Array < FeedItem >> {
         // Generate the path
         let path = `${this.domain}/api/Feeds`;
@@ -71,13 +78,32 @@ export class API {
     /**
      * 
      * @method
+     * @name API#ApiMessagesPost
+     * @param {} data - 
+     */
+    ApiMessagesPost(body: MessagePost,
+        headers: any = {}
+    ): Promise < number > {
+        // Generate the path
+        let path = `${this.domain}/api/Messages`;
+
+        let queryParameters = new URLSearchParams();
+        path += '?' + queryParameters.toString();
+
+        return this.post(path, JSON.stringify(body))
+            .then(result => result.json());
+    }
+
+    /**
+     * 
+     * @method
      * @name API#ApiThreadsByIdGet
      * @param {integer} id - 
      */
     ApiThreadsByIdGet(parameters: {
             id: number,
         },
-        headers: any,
+        headers: any = {}
     ): Promise < Thread > {
         // Generate the path
         let path = `${this.domain}/api/Threads/${parameters.id}`;
@@ -94,8 +120,8 @@ export class API {
      * @name API#ApiThreadsPost
      * @param {} data - 
      */
-    ApiThreadsPost(body: postData,
-        headers: any
+    ApiThreadsPost(body: ThreadPost,
+        headers: any = {}
     ): Promise < number > {
         // Generate the path
         let path = `${this.domain}/api/Threads`;

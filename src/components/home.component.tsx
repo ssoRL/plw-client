@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { PageSummary } from './page-summary.component';
 import { API, FeedItem } from '../api/api';
 import { FeedBox } from './feed-box';
 import { NewThread } from './new-thread';
+import { FeedThread } from './feed-thread';
 
 export interface HomeProps {
     api: API;
@@ -27,7 +27,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
     }
 
     createThread = (name: string) => {
-        const newId = this.props.api.ApiThreadsPost({name: name}, {});
+        const newId = this.props.api.ApiThreadsPost({ name: name }, {});
         // tslint:disable-next-line:no-console
         console.log(newId);
     }
@@ -37,9 +37,13 @@ export class Home extends React.Component<HomeProps, HomeState> {
             <div className="home-component">
                 <div className="layout-buffer" />
                 <div className="layout-main">
-                    <FeedBox title="Create New Thread"><NewThread createThread={this.createThread}/></FeedBox>
-                    {this.state.feed.map(feed =>
-                        PageSummary(feed)
+                    <FeedBox title="Create New Thread"><NewThread createThread={this.createThread} /></FeedBox>
+                    {this.state.feed.map(
+                        feed => (
+                            <FeedBox title={feed.name}>
+                                <FeedThread id={feed.id} name={feed.name} api={this.props.api} />
+                            </FeedBox>
+                        )
                     )}
                 </div>
                 <div className="layout-buffer" />

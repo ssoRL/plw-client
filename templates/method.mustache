@@ -11,7 +11,7 @@
 */
 {{#isPOST}}
 {{&methodName}}({{#parameters}}{{#isBodyParameter}}body: {{> type}}{{/isBodyParameter}}{{/parameters}},
-headers: any
+headers: any = {}
 ): Promise<{{ successfulResponseType }}> {
     // Generate the path
     let path = `${this.domain}{{&pathFormatString}}`;
@@ -30,7 +30,7 @@ headers: any
 {{&methodName}}(parameters:{
 {{#parameters}}{{^isSingleton}}{{&camelCaseName}}: {{> type}},
 {{/isSingleton}}{{/parameters}}},
-headers: any,
+headers: any = {}
 ): Promise<{{ successfulResponseType }}> {
     // Generate the path
     let path = `${this.domain}{{&pathFormatString}}`;
