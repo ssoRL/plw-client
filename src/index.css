@@ -1,3 +1,5 @@
+@import url("https://unpkg.com/tachyons/css/tachyons.min.css");
+
 body {
   margin: 0;
   padding: 0;
@@ -24,6 +26,8 @@ body {
   border: 1px solid black;
 }
 
-.hide {
-  display: none;
+.feed-box .main {
+  overflow: scroll;
+  transition-property: max-height;
+  transition-duration: 0.4s;
 }
