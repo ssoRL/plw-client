@@ -27,8 +27,10 @@ export class FeedBox extends React.Component<FeedBoxProps, FeedBoxState> {
         if (mainDivParam instanceof HTMLDivElement) {
             this.mainDiv = mainDivParam;
             const childChangeObserver = new MutationObserver(() => {
-                const targetHeight = Math.min(500, this.mainDiv.scrollHeight);
-                this.setState({ mainStyles: { maxHeight: targetHeight } });
+                if (this.state.show) {
+                    const targetHeight = Math.min(500, this.mainDiv.scrollHeight);
+                    this.setState({ mainStyles: { maxHeight: targetHeight } });
+                }
             });
             childChangeObserver.observe(this.mainDiv, { childList: true, subtree: true });
         } else {
@@ -56,7 +58,7 @@ export class FeedBox extends React.Component<FeedBoxProps, FeedBoxState> {
                     className={`main ${this.state.show ? 'notslide-down' : 'notslide-up'}`}
                     style={this.state.mainStyles}
                 >
-                    {this.state.show || this.state.animating ? this.props.children : null}
+                    {this.props.children}
                 </div>
             </div>
         );

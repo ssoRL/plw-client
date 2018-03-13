@@ -13,11 +13,11 @@ body {
 }
 
 .layout-buffer {
-  flex-grow: 2;
+  flex: 2 0 0
 }
 
 .layout-main {
-  flex-grow: 5;
+  flex: 5 0 0;
 }
 
 .feed-box {
