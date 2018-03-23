@@ -1,3 +1,8 @@
+export type StartSessionParameters = {
+    username: string
+
+    password: string
+};
 export type FeedItem = {
     id: number
 
@@ -56,6 +61,25 @@ export class API {
 
     addErrorHandler(handler: (() => {})) {
         this.errorHandlers.push(handler);
+    }
+
+    /**
+     * 
+     * @method
+     * @name API#ApiAuthPost
+     * @param {} data - 
+     */
+    ApiAuthPost(body: StartSessionParameters,
+        headers: any = {}
+    ): Promise < string > {
+        // Generate the path
+        let path = `${this.domain}/api/Auth`;
+
+        let queryParameters = new URLSearchParams();
+        path += '?' + queryParameters.toString();
+
+        return this.post(path, JSON.stringify(body))
+            .then(result => result.json());
     }
 
     /**
