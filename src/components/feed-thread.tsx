@@ -8,7 +8,6 @@ interface UnconfirmedMessage {
 export class FeedThreadProps {
     id: number;
     name: string;
-    api: API;
 }
 
 export class FeedThreadState {
@@ -26,7 +25,7 @@ export class FeedThread extends React.Component<FeedThreadProps, FeedThreadState
         super(props);
 
         // make an api call to determine the
-        this.props.api.ApiThreadsByIdGet({id: this.props.id}).then(
+        API.Instance().ApiThreadsByIdGet({id: this.props.id}).then(
             thread => {
                 this.setState({messages: thread.messages});
             }
@@ -44,7 +43,7 @@ export class FeedThread extends React.Component<FeedThreadProps, FeedThreadState
             threadId: this.props.id, 
             content: content
         };
-        this.props.api.ApiMessagesPost(messagePost);
+        API.Instance().ApiMessagesPost(messagePost);
         const messages = this.state.messages;
         messages.push({content: content});
         this.setState({messages: messages});

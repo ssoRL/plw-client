@@ -19,7 +19,7 @@ export class PlwRoutes extends React.Component<PlwRoutesProps, PlwRoutesState> {
         authenticated: false,
         token: ''
     };
-
+    
     constructor(props: PlwRoutesProps) {
         super(props);
     }
@@ -29,7 +29,7 @@ export class PlwRoutes extends React.Component<PlwRoutesProps, PlwRoutesState> {
             <Router history={createBrowserHistory()}>
                 <Switch>
                     <Route path="/login" component={Login} />
-                    <ProtectedRoute path="/" authenticated={this.state.authenticated}>
+                    <ProtectedRoute path="/">
                         <Home />
                     </ProtectedRoute>
                 </Switch>

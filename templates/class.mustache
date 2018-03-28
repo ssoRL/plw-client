@@ -8,22 +8,20 @@ export type {{&name}} = {{#tsType}}{{> type}}{{/tsType}};
  * @param {(string)} [domainOrOptions] - The project domain.
  */
 export class {{&className}} {
+    private static self: API | null = null;
 
-    private domain: string = '{{&domain}}';
-    private errorHandlers: (()=>{})[] = [];
+    public domain: string | null = null;
+    public token: string | null = null;
+    public errorHandlers: (() => {})[] = [];
 
-    constructor(domain?: string) {
-        if(domain) {
-            this.domain = domain;
+    private constructor () {}
+
+    static Instance() {
+        if(API.instance == null) {
+            API.instance = new API();
         }
-    }
-
-    getDomain() {
-        return this.domain;
-    }
-
-    addErrorHandler(handler: (()=>{})) {
-        this.errorHandlers.push(handler);
+        
+        return API.instance;
     }
 
 {{#methods}}
@@ -47,7 +45,9 @@ export class {{&className}} {
         return fetch(url, {
             method: 'get',
             headers: headers
-        })
+        }).catch(reason =>
+            this.errorHandler(reason)
+        );
     }
 
     private post(
@@ -68,6 +68,8 @@ export class {{&className}} {
             method: 'post',
             headers: headers,
             body: stringifiedBody
-        })
+        }).catch(reason =>
+            this.errorHandler(reason)
+        );
     }
 }

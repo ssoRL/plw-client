@@ -1,45 +1,78 @@
 import * as React from 'react';
-import { API } from '../../api/api';
+import { Field, reduxForm } from 'redux-form';
 
-export interface LoginProps { }
+// tslint:disable-next-line:no-any
+const handleLogin = (o: any) => {
+    // tslint:disable-next-line:no-console
+    console.log(o);
+};
 
-export interface LoginState {
-    username: string;
-    password: string;
-}
+// tslint:disable-next-line:no-any
+const LoginForm: React.SFC<{}> = props => {
+    return (
+        <form onSubmit={handleLogin}>
+            <Field name="username" component="input" type="text" />
+            <Field name="password" component="input" type="text" />
+            <button type="submit">Submit</button>
+        </form>
+    );
+};
 
-export class Login extends React.Component<LoginProps, LoginState> {
-    state: LoginState = {
-        username: '',
-        password: ''
-    };
-    
-    api: API = new API('http://localhost:5000');
+export const Login = reduxForm({
+    form: 'login'
+})(LoginForm);
 
-    constructor(props: LoginProps) {
-        super(props);
-    }
+// tslint:disable-next-line:no-any
+// const handleLogin = (o: object) => {
+//     // tslint:disable-next-line:no-console
+//     console.log(o);
+// };
 
-    updateUserName = (event: React.FormEvent<HTMLInputElement>) => {
-        this.setState({username: event.currentTarget.value});
-    }
+// export const Login: React.SFC<{}> = props => {
+//     return (
+//         <LoginForm handleSubmit={handleLogin} />
+//     )
+// }
 
-    updatePassword = (event: React.FormEvent<HTMLInputElement>) => {
-        this.setState({password: event.currentTarget.value});
-    }
+// import * as React from 'react';
+// import { API } from '../../api/api';
 
-    login = () => {
-        // tslint:disable-next-line:no-console
-        console.log(`${this.state.username} w/ ${this.state.password}`);
-    }
+// export interface LoginProps { }
 
-    render() {
-        return (
-            <div>
-                <input type="text" onChange={this.updateUserName} />
-                <input type="password" onChange={this.updatePassword} />
-                <button onClick={this.login}>Login</button>
-            </div>
-        );
-    }
-}
+// export interface LoginState {
+//     username: string;
+//     password: string;
+// }
+
+// export class Login extends React.Component<LoginProps, LoginState> {
+//     state: LoginState = {
+//         username: '',
+//         password: ''
+//     };
+
+//     constructor(props: LoginProps) {
+//         super(props);
+//     }
+
+//     updateUserName = (event: React.FormEvent<HTMLInputElement>) => {
+//         this.setState({username: event.currentTarget.value});
+//     }
+
+//     updatePassword = (event: React.FormEvent<HTMLInputElement>) => {
+//         this.setState({password: event.currentTarget.value});
+//     }
+
+//     login = () => {
+//         API.Instance().ApiAuthPost({username: this.state.username, password: this.state.password});
+//     }
+
+//     render() {
+//         return (
+//             <div>
+//                 <input type="text" onChange={this.updateUserName} />
+//                 <input type="password" onChange={this.updatePassword} />
+//                 <button onClick={this.login}>Login</button>
+//             </div>
+//         );
+//     }
+// }

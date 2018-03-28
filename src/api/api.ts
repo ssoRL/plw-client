@@ -45,22 +45,21 @@ export type ThreadPost = {
  * @param {(string)} [domainOrOptions] - The project domain.
  */
 export class API {
+    private static instance: API | null = null;
 
-    private domain: string = '';
-    private errorHandlers: (() => {})[] = [];
+    public domain: string | null = null;
+    public token: string | null = null;
+    // Handles errors codes (400<= status < 600)
+    public errorHandler: (response: Response) => Promise<Response>;
+    // Deals with any other exceptions in a generic way
+    public catchHandler: (reason: any) => Promise<Response>;
 
-    constructor(domain ? : string) {
-        if (domain) {
-            this.domain = domain;
+    static Instance() {
+        if(API.instance == null) {
+            API.instance = new API();
         }
-    }
-
-    getDomain() {
-        return this.domain;
-    }
-
-    addErrorHandler(handler: (() => {})) {
-        this.errorHandlers.push(handler);
+        
+        return API.instance;
     }
 
     /**
@@ -175,7 +174,15 @@ export class API {
         return fetch(url, {
             method: 'get',
             headers: headers
-        })
+        }).then(response => {
+            if(response.status >= 400 && response.status < 600) {
+                return this.errorHandler(response)
+            }
+            
+            return response;
+        }).catch(reason =>
+            this.catchHandler(reason)
+        );
     }
 
     private post(
@@ -199,5 +206,6 @@ export class API {
             headers: headers,
             body: stringifiedBody
         })
+          
     }
 }

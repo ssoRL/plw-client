@@ -14,20 +14,22 @@ export class Home extends React.Component<HomeProps, HomeState> {
     state: HomeState = {
         feed: []
     };
-    
-    api: API = new API('http://localhost:5000');
 
     constructor(props: HomeProps) {
         super(props);
 
         // Get the pages
-        this.api.ApiFeedsGet({}, {}).then(feed => {
+        const api = API.Instance();
+        api.ApiFeedsGet({}).then(feed => {
             this.setState({ feed: feed });
-        });
+        }).catch(reason => 
+            // tslint:disable-next-line:no-console
+            console.log(reason)
+        );
     }
 
     createThread = (name: string) => {
-        const newId = this.api.ApiThreadsPost({ name: name }, {});
+        const newId = API.Instance().ApiThreadsPost({ name: name }, {});
         // tslint:disable-next-line:no-console
         console.log(newId);
     }
@@ -41,7 +43,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                     {this.state.feed.map(
                         feed => (
                             <FeedBox title={feed.name}>
-                                <FeedThread id={feed.id} name={feed.name} api={this.api} />
+                                <FeedThread id={feed.id} name={feed.name} />
                             </FeedBox>
                         )
                     )}
